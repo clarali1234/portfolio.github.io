@@ -1,6 +1,12 @@
 ## Welcome to My Website for ANLY503
 
-### Markdown
+# Final Project 
+
+# Assignment 6
+
+# Assignment 7
+
+
 
 Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
 
