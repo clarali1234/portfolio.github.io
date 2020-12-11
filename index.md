@@ -1,6 +1,6 @@
 ## Welcome to My Website for ANLY503
 
-## [Final Project](https://clarali1234.github.io/WenLi.git.io/)
+## Final Project [Covid-19 Visulization](https://clarali1234.github.io/WenLi.git.io/)
     This Final Project is about the data visulization of covid-19 
     confirmed and death cases in the US and different States and 
     the spread of the covid-19, especially in the white house 
