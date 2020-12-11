@@ -1,0 +1,280 @@
+---
+title: "Final Project"
+output: 
+  flexdashboard::flex_dashboard:
+    vertical_layout: fill
+    source_code: embed
+---
+
+```{r setup, include=FALSE}
+library(flexdashboard)
+library(readr)
+library(plyr)
+library(ggplot2)
+library(rjson)
+library(tidyverse) 
+library(readr)
+library(plotly)
+library(scales)
+library(sf)
+library("tm")
+library("SnowballC")
+library("wordcloud")
+library("RColorBrewer")
+
+```
+
+
+
+COVID-19 Cases Geo Visualization 
+===================================== 
+
+### US Covid-19 Confirmed Cases Geo Plot County Level
+```{r}
+
+df <- read_csv(file = 'data/covid_us.csv')
+df <- aggregate(cases ~ fips, data = df, FUN = sum)
+df$fips <- str_pad(df$fips, width = 5, side="left", pad="0")
+
+url <- 'https://raw.githubusercontent.com/plotly/datasets/master/geojson-counties-fips.json'
+counties <- rjson::fromJSON(file=url)
+g <- list(
+  scope = 'usa',
+  projection = list(type = 'albers usa'),
+  showlakes = TRUE,
+  lakecolor = toRGB('white')
+)
+
+fig<- plot_ly() %>% add_trace(
+    type="choropleth",
+    geojson=counties,
+    locations=df$fips,
+    z=df$cases,
+    zmin = 0,
+    zmax = 1000000,
+    colorscale="Viridis",
+    marker=list(line=list(
+      width=0)
+    )
+  )  %>% colorbar(title = "covid-19 cases") %>% layout(
+    title = "2020 US covid-19 confirmed cases by County"
+) 
+
+fig %>% layout(
+    geo = g
+ )
+
+fig
+```
+
+
+Covid-19 Cases Time Series Visualization
+===================================== 
+
+Column
+-----------------------------------------------------------------------
+
+### Time series plot of the U.S. Covid-19 test results in 2020 (positive/negative cases)
+
+```{r}
+
+
+
+df <- read_csv(file = 'data/national-history.csv')
+data <- df
+x1 <- as.Date(data$date)
+y1 <- as.vector(data$negative)
+y2 <- as.vector(data$positive)
+
+plot_ly(data, x = ~x1, y = ~y1, name = 'negative', type = 'scatter', mode = 'lines') %>% add_trace(y = ~y2, name = 'positive', mode = 'lines+markers') %>% layout(title = "U.S. Covid-19 test results in 2020 (positive/negative cases)", xaxis = list(title = "Months"),
+         yaxis = list (title = "Cases"))
+
+
+```
+
+Column
+-----------------------------------------------------------------------
+### The U.S. death Increases and hospitalizedCurrently in 2020
+
+```{r}
+df <- read_csv(file = 'data/national-history.csv')
+data <- df
+x1 <- as.Date(data$date)
+y1 <- as.vector(data$deathIncrease)
+y2 <- as.vector(data$hospitalizedCurrently)
+
+plot_ly(data, x = ~x1, y = ~y1, name = 'deathIncrease', type = 'scatter', mode = 'lines') %>% add_trace(y = ~y2, name = 'hospitalizedCurrently', mode = 'lines+markers') %>% layout(title = "U.S. Covid-19 deathIncrease and hospitalizedCurrently results in 2020", xaxis = list(title = "Months"),
+         yaxis = list (title = "Cases"))
+#coord_flip()
+
+```
+
+Covid-19 Cases By Region Visualization
+===================================== 
+
+Column
+-----------------------------------------------------------------------
+### The U.S. confirmed cases states level in 2020
+```{r}
+
+
+df <- read_csv(file = 'data/covid_us.csv')
+cases_by_state <- aggregate(cases ~ state, data = df, FUN = sum)
+cases_by_state <- cases_by_state[order(cases_by_state$cases, decreasing = TRUE),]
+data <- data.frame(cases_by_state)
+
+fig <- plot_ly(data, x = ~state, y = ~cases, type = 'bar',
+        marker = list(color = 'rgb(158,202,225)',
+                      line = list(color = 'rgb(8,48,107)',
+                                  width = 1.5)))
+fig %>% layout(title = "The U.S. confirmed cases by states level in 2020",
+         xaxis = list(title = ""),
+         yaxis = list(title = ""))
+
+```
+
+
+Column
+-----------------------------------------------------------------------
+### The U.S. deaths cases states level in 2020
+```{r}
+df <- read_csv(file = 'data/covid_us.csv')
+deaths_by_state <- aggregate(deaths ~ state, data = df, FUN = sum)
+deaths_by_state <- deaths_by_state[order(deaths_by_state$deaths, decreasing = TRUE),]
+data <- data.frame(deaths_by_state)
+
+fig <- plot_ly(data, x = ~state, y = ~deaths, type = 'bar',
+        marker = list(color = 'rgb(158,202,225)',
+                      line = list(color = 'rgb(8,48,107)',
+                                  width = 1.5)))
+fig %>% layout(title = "The U.S. death cases by states level in 2020",
+         xaxis = list(title = ""),
+         yaxis = list(title = ""))
+
+```
+
+
+Covid-19 Spread Visualization
+===================================== 
+
+Column
+-----------------------------------------------------------------------
+
+```{python,eval=FALSE}
+import pandas as pd
+import xlrd
+import matplotlib.pyplot as plt
+from ast import literal_eval
+import itertools
+from matplotlib.pyplot import figure
+def create_source_target(combination):
+    return pd.Series([list(combination)[0], list(combination)[1]])
+events = pd.read_excel('data/events.xlsx')
+#events = pd.read_excel('/Users/clara/Downloads/503/finalProj/data/events.xlsx')
+names = pd.read_excel('data/names.xlsx')
+events['ppl'] = events['ppl'].apply(lambda x: literal_eval(x))
+events['combination'] = events['ppl'].apply(lambda x: list(itertools.combinations(x, 2)))
+events_combination= events.explode('combination')
+events_combination[['source_abb', 'target_abb']] = events_combination['combination'].apply(create_source_target)
+events_combination = pd.merge(events_combination, names, how='left',
+                              left_on='source_abb', right_on='abbrev')
+events_combination = pd.merge(events_combination, names, how='left',
+                              left_on='target_abb', right_on='abbrev')
+rename_rule = {'name_x': 'source', 'name_y': 'target'}
+events_combination.rename(columns=rename_rule,inplace=True)
+events_combination['weight'] = 1
+events_combination.to_csv('edges1.csv')
+events_combination['counts'] = events_combination.groupby(['source', 'target'])['weight'].transform('count')
+events_combination = events_combination.reset_index()
+events_combination = events_combination.drop([ 'date', 'event', 
+    'source_abb', 'target_abb', 'ppl', 'combination', 'abbrev_x', 'abbrev_y', ], axis=1)
+ #=events_combination.sort(['counts'], ascending=False)
+
+df_final = events_combination.sort_values(by=['counts'], ascending=False)
+df_final.to_csv (r'network.csv', index = False, header=True)
+```
+
+
+```
+
+
+
+### White house events spread for Donald Trump tracing
+```{r}
+library(readr)
+library(tidyverse)
+library(network)
+viz_df <- read_csv(file = 'data/network.csv') %>%  drop_na()
+df_first_35 <- viz_df[1:35, ]
+sources35 <- df_first_35 %>%
+  distinct(source) %>%
+  plyr::rename(c("source"="label"))
+#distinct(select(df, source))
+
+destinations35 <- df_first_35 %>%
+  distinct(target) %>%
+  plyr::rename(c("target"="label"))
+
+nodes35 <- full_join(sources35, destinations35, by = "label")
+nodes35 <- nodes35 %>% rowid_to_column("id")
+per_route35 <- df_first_35
+edges35 <- per_route35 %>% 
+  left_join(nodes35, by = c("source" = "label")) %>% 
+  plyr::rename(c("id"="from"))
+
+edges35 <- edges35 %>% 
+  left_join(nodes35, by = c("target" = "label")) %>% 
+  plyr::rename(c("id"="to"))
+edges35 <- select(edges35, from, to, counts)
+
+detach(package:network)
+rm(routes_network)
+library(igraph)
+routes_igraph <- graph_from_data_frame(d = edges35, vertices = nodes35, directed = TRUE)
+plot(routes_igraph, layout = layout_with_graphopt, edge.arrow.size = 0.2)
+```
+
+
+Column
+-----------------------------------------------------------------------
+### Word Cloud for White house events spread Donald Trump tracing
+```{r}
+# Load
+
+
+df <- read_csv(file = 'network.csv')
+x <- as.vector(as.matrix(df[,c("source", "target")]))
+set.seed(1234)
+wordcloud(words = x, min.freq = 1,
+          max.words=200, random.order=FALSE, rot.per=0.35, 
+          colors=brewer.pal(8, "Dark2"))
+```
+
+
+About Page 
+===================================== 
+
+Row {data-width=650}
+-----------------------------------------------------------------------
+
+### Final Project Overview
+This Final Project is about the covid-19 confirmed and death cases in the US and different States and the spread of the covid-19, especially in the white house recently events. Thereare are three datasets that were used in this project.
+
+
+Row {data-height=350}
+-----------------------------------------------------------------------
+### 
+1. Covid-19 confirmed cases in the use
+  Data source: https://covidtracking.com/data/download
+  
+###
+2. Covid-19 confirmed and deaths cases via States 
+  Data source: COVID-19 Open Research Dataset Challenge (CORD-19)
+  https://www.kaggle.com/allen-institute-for-ai/CORD-19-research-challenge
+  
+###
+3. Covid-19 white house spread, dataset used are after python cleaned, 
+  individuals who were with President Trump prior to the announcement of his positive COVID test.
+  Data source: https://www.kaggle.com/theogoe/white-house-covid-spread
+  Reference: https://towardsdatascience.com/visualizing-the-white-house-covid-outbreak-f5e35b01ae26
+
