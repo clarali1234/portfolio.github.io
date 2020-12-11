@@ -1,48 +1,29 @@
 ## Welcome to My Website for ANLY503
 
 ## [Final Project](https://clarali1234.github.io/WenLi.git.io/)
-    This Final Project is about the data visulization of covid-19 confirmed
-    and death cases in the US and different States and the spread of the 
-    covid-19, especially in the white house recently events. Thereare 
-    are three datasets that were used in this project.
+    This Final Project is about the data visulization of covid-19 
+    confirmed and death cases in the US and different States and 
+    the spread of the covid-19, especially in the white house 
+    recently events. There are three datasets that were used in 
+    this project.
 
    
    
 
-## Assignment 6
-
+## Assignment 6 [Geospatial Visualization Assignment](https://clarali1234.github.io/a6.githun.io/)
+    In this assignment we need to create visualize historical US 
+    election data and unemployment rates across US counties using
+    choropleths for Texas, California and Pennsylvania states.
    
 
-## Assignment 7
+## Assignment 7 [Network Graph Assignment](https://clarali1234.github.io/a7.github.io/)
+    In this assignment we need tovisualize the flow of people 
+    between different states in the United States using network 
+    graphs. Choose New York, Texas, Michigan, Virgia as start
+    states and you find the top 10 states that people moved 
+    to from these states in the year
+    
 
 
 
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
 
-```markdown
-Syntax highlighted code block
-
-# Header 1
-## Header 2
-### Header 3
-
-- Bulleted
-- List
-
-1. Numbered
-2. List
-
-**Bold** and _Italic_ and `Code` text
-
-[Link](url) and ![Image](src)
-```
-
-For more details see [GitHub Flavored](https://guides.github.com/features/mastering-markdown/).
-
-### Jekyll Themes
-
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/clarali1234/portfolio.github.io/settings). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
-
-### Support or Contact
-
-Having trouble with Pages? Check out our [documentation](https://docs.github.com/categories/github-pages-basics/) or [contact support](https://github.com/contact) and we’ll help you sort it out.
