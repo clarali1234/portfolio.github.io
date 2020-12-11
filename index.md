@@ -1,10 +1,10 @@
 ## Welcome to My Website for ANLY503
 
-# Final Project 
+## Final Project 
 
-# Assignment 6
+## Assignment 6
 
-# Assignment 7
+## Assignment 7
 
 
 
