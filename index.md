@@ -17,7 +17,7 @@
    
 
 ## Assignment 7 [Network Graph Assignment](https://clarali1234.github.io/a7.github.io/)
-    In this assignment we need tovisualize the flow of people 
+    In this assignment we need to visualize the flow of people 
     between different states in the United States using network 
     graphs. Choose New York, Texas, Michigan, Virgia as start
     states and you find the top 10 states that people moved 
