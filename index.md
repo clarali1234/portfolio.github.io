@@ -1,7 +1,10 @@
 ## Welcome to My Website for ANLY503
 
 ## [Final Project](https://clarali1234.github.io/WenLi.git.io/)
-    This Final Project is about the covid-19 confirmed and death cases in the US and different States and the spread of the covid-19, especially in the white house recently events. Thereare are three datasets that were used in this project.
+    This Final Project is about the covid-19 confirmed and death cases in the US 
+    and different States and the spread of the covid-19, especially in the white 
+    house recently events. Thereare are three datasets that were used in this 
+    project.
 
    
    
